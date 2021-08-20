@@ -1,11 +1,12 @@
 import requests
 from bs4 import BeautifulSoup
+
 def test_connection(link):
     while True:
         try:
             response = requests.get(link)
         except:
-            link = input('Link fora do ar ou invalido, tente novamente')
+            link = input('Link fora do ar ou invalido, tente novamente: ')
             continue
         else:
             return (link)
@@ -28,12 +29,27 @@ def get_title(site, lan_quant = 1):
             list_title.append(title.text)
         return (list_title)
     
-def get_abstract(site, lan_quant=1):
-    if lan_quant == 1:
+def get_abstract(site):
         section = site.find('article', attrs={'class': 'col-md-10 col-md-offset-2 col-sm-12 col-sm-offset-0', 'id':'articleText'})
-        abstract = section.find('p').text
-        return abstract
+        abstract = section.find('p')
+        return abstract.text
 
-link = test_connection(input('Digite o link do artigo'))
+def get_keyword(site):
+    section = site.find('article', attrs={'class': 'col-md-10 col-md-offset-2 col-sm-12 col-sm-offset-0', 'id':'articleText'})
+    keyword = section.find('br').next_element
+    return keyword
+
+def get_author(site):
+    section = site.find('div', attrs={'class': 'contribGroup'})
+    authors = section.find_all('a')
+    author = []
+    for i in range(len(authors)):
+        if i == len((authors))-1:
+            pass
+        elif i % 2 == 0 or i == 0 :
+             author.append(authors[i].text)
+    print(author)
+    
+link = test_connection(input('Digite o link do artigo: '))
 site = capture_html(link)
-section = site.find('article', attrs={'class': 'col-md-10 col-md-offset-2 col-sm-12 col-sm-offset-0', 'id':'articleText'})
+get_author(site)
