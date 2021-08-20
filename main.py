@@ -43,13 +43,13 @@ def get_author(site):
     section = site.find('div', attrs={'class': 'contribGroup'})
     authors = section.find_all('a')
     author = []
-    for i in range(len(authors)):
-        if i == len((authors))-1:
+    range_authors = len((authors))
+    for i in range(range_authors):
+        if i == range_authors-1:
             pass
         elif i % 2 == 0 or i == 0 :
              author.append(authors[i].text)
-    print(author)
+    return author
     
 link = test_connection(input('Digite o link do artigo: '))
 site = capture_html(link)
-get_author(site)
