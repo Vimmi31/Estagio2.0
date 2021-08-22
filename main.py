@@ -16,7 +16,9 @@ def txt_facebook(title, authors, caminho):
     except FileNotFoundError:
         open(caminho, 'w+')    
     facebook = open(caminho, 'a')
-    facebook.write(title + ' - ' + authors[0])
+    facebook.write(title.rstrip('\n') + ' -')
+    for author in authors:
+        facebook.write(author + ' ')
 
-caminho = '/home/vinicius/Área de Trabalho/aaaaaa'
+caminho = 'D:\Programas\q.txt'
 txt_facebook(title, authors, caminho)
