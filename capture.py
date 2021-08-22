@@ -16,27 +16,23 @@ def capture_html(link):
     site = BeautifulSoup(content, 'html.parser')
     return(site)
 
-def get_title(site, lan_quant = 1):
-    if lan_quant == 1:
+def get_title(site, social = True):
         title = site.find('h1', attrs={'class': 'article-title'})
-        return (title.text)
-    else:
-        list_title = []
-        cont = 0
-        while cont < lan_quant:
-            cont += 1
-            title = site.find('h'+str(cont), attrs={'class': 'article-title'})
-            list_title.append(title.text)
-        return (list_title)
+        if social:
+            return (title.text.rstrip('\n') + ' -')
+        else:
+             return (title.text.rstrip('\n'))
     
 def get_abstract(site):
         section = site.find('article', attrs={'class': 'col-md-10 col-md-offset-2 col-sm-12 col-sm-offset-0', 'id':'articleText'})
         abstract = section.find('p')
         return abstract.text
 
-def get_keyword(site):
+def get_keyword(site, Hashtag = True):
     section = site.find('article', attrs={'class': 'col-md-10 col-md-offset-2 col-sm-12 col-sm-offset-0', 'id':'articleText'})
     keyword = section.find('br').next_element
+    if Hashtag == True:
+        keyword = '#' + keyword.replace(" ", "").replace(';', ' #')
     return keyword
 
 def get_author(site):
@@ -45,10 +41,8 @@ def get_author(site):
     author = []
     range_authors = len((authors))
     for i in range(range_authors):
-        if i == range_authors-1:
-            pass
-        elif i % 2 == 0 or i == 0 :
+        if (i % 3 == 0) or (i == 0) :
              author.append(authors[i].text)
-    if len(author) == 2:
-        author.pop()
+    author.pop() #Para tirar o lixo capturado(textos que não são nomes dos autores)
     return author
+
