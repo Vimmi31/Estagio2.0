@@ -7,7 +7,7 @@ def txt_facebook(link, caminho, site):
     except FileNotFoundError:
         open(caminho, 'w+')    
     facebook = open(caminho, 'a')
-    facebook.write(capture.get_title(site))
+    facebook.write(capture.get_title(site) + ' -')
     authors = capture.get_author(site)
     for author in authors:
         facebook.write(author.rstrip() + ',')

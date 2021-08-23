@@ -2,6 +2,14 @@ import requests
 from bs4 import BeautifulSoup
 
 def test_connection(link):
+    """
+        Função que valida se o link digitado é correto, se não for pede para o user digitar um novo link, até que ele funcione
+    Args:
+        link [String]: Recebe o link do resumo 
+
+    Returns:
+        [type]: [description]
+    """
     while True:
         try:
             response = requests.get(link)
