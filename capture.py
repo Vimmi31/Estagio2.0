@@ -19,7 +19,7 @@ def capture_html(link):
 def get_title(site, social = True):
         title = site.find('h1', attrs={'class': 'article-title'})
         if social:
-            return (title.text.rstrip('\n') + ' -')
+            return (title.text.rstrip('\n'))
         else:
              return (title.text.rstrip('\n'))
     
