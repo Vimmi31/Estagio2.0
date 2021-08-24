@@ -19,6 +19,7 @@ def test_connection(link):
             continue
         else:
             return (link)
+            break
         
 def capture_html(link):
     """Retorna o conteudo html do link
@@ -48,9 +49,12 @@ def get_abstract(site):
     Returns:
         Str: Resumo do site
     """
-    section = site.find('article', attrs={'class': 'col-md-10 col-md-offset-2 col-sm-12 col-sm-offset-0', 'id':'articleText'})
-    abstract = section.find('p')
-    return abstract.text
+    try:
+        section = site.find('article', attrs={'class': 'col-md-10 col-md-offset-2 col-sm-12 col-sm-offset-0', 'id':'articleText'})
+        abstract = section.find('p')
+        return abstract.text
+    except:
+        return "Não foi possivel capturar o resumo"
 
 def get_keyword(site, Hashtag = True):
     """Retorna as palavras chaves do artigo
@@ -61,11 +65,15 @@ def get_keyword(site, Hashtag = True):
     Returns:
         Str: Palavras chaves
     """
-    section = site.find('article', attrs={'class': 'col-md-10 col-md-offset-2 col-sm-12 col-sm-offset-0', 'id':'articleText'})
-    keyword = section.find('br').next_element
-    if Hashtag == True:
-        keyword = '#' + keyword.replace(" ", "").replace(';', ' #')
-    return keyword
+    try:
+        section = site.find('article', attrs={'class': 'col-md-10 col-md-offset-2 col-sm-12 col-sm-offset-0', 'id':'articleText'})
+        keyword = section.find('br').next_element
+    except:
+        return "Não foi possivel capturar as palavras chaves"
+    else:
+        if Hashtag == True:
+            keyword = '#' + keyword.replace(" ", "").replace(';', ' #')
+        return keyword
 
 def get_author(site):
     """Retorna todos os autores do artigo
@@ -74,15 +82,18 @@ def get_author(site):
     Returns:
         Str: Autores
     """
-    section = site.find('div', attrs={'class': 'contribGroup'})
-    authors = section.find_all('a')
-    author = []
-    range_authors = len((authors))
-    for i in range(range_authors):
-        if (i % 3 == 0) or (i == 0) :
-             author.append(authors[i].text.lstrip().rstrip())
-    author.pop() #Para tirar o lixo capturado(textos que não são nomes dos autores)
-    return author
+    try:
+        section = site.find('div', attrs={'class': 'contribGroup'})
+        authors = section.find_all('a')
+        author = []
+        range_authors = len((authors))
+        for i in range(range_authors):
+            if (i % 3 == 0) or (i == 0) :
+                author.append(authors[i].text.lstrip().rstrip())
+        author.pop() #Para tirar o lixo capturado(textos que não são nomes dos autores)
+        return author
+    except:
+        return ["Não foi possivel capturar os autores"]
 
 def get_original_link(site):
     """Função que rotorna o link do texto completo(doi)
@@ -92,7 +103,10 @@ def get_original_link(site):
     Returns:
         Str: Link do texto completo
     """
-    section = site.find('span', attrs={'class': 'group-doi'})
-    original = section.find('a')
-    return original.text
+    try:
+        section = site.find('span', attrs={'class': 'group-doi'})
+        original = section.find('a')
+        return original.text
+    except: 
+        return 'Não foi possivel capturar o link original'
 

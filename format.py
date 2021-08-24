@@ -14,15 +14,30 @@ def txt_facebook(link, caminho, site):
     except FileNotFoundError:
         open(caminho, 'w+')    
     facebook = open(caminho, 'a')
-    facebook.write(capture.get_title(site) + ' -')
+    
+    # Escrevendo o Titulo do artido no .txt
+    facebook.write(capture.get_title(site) + ' - ')
+    
     authors = capture.get_author(site)
-    for author in authors:
-        facebook.write(author.rstrip() + ',')
-    facebook.write('\n\n')
+    # Escrevendo os nomes dos autores um a um
+    for author in authors: 
+        if len(authors) == 1: # verficando se há apenas um autor na lista
+            facebook.write(author.rstrip())
+            break
+        if author == authors[-1]: #Verficando se é o ultimo autor da lista
+            facebook.write(' e ' +author.rstrip())
+        elif author == authors[-2]: # Verificando se é peloultimo
+            facebook.write(author.rstrip())
+        else:    
+            facebook.write(author.rstrip() + ', ')
+    facebook.write('\n\n')# Quebra de linha para organização
+    # Escrevendo o resumo no arquivo .txt
     facebook.write(capture.get_abstract(site))
     facebook.write('\n\n')
+    # Escrevendo o link no arquivo .txt
     facebook.write('Acesso em: ' + link)
     facebook.write('\n\n')
+    # Escrevendo as palavras chaves no arquivo .txt
     facebook.write(capture.get_keyword(site))
     facebook.close()
 
@@ -86,7 +101,7 @@ def txt_blog(link, caminho, site_pb, site_en, site_es):
         interface.write(('[:' + tag + ']' + capture.get_title(lan)).replace('\n', ''))
         if tag == 'es':
             interface.write('[:]')
-    interface.write('\n\n') # Quebra de linha para organização
+    interface.write('\n\n') 
     # For responsavel pela geração do corpo do site
     for i in range(3):
         if i == 0:
