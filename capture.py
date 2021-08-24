@@ -109,4 +109,3 @@ def get_original_link(site):
         return original.text
     except: 
         return 'Não foi possivel capturar o link original'
-

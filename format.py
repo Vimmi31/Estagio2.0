@@ -130,3 +130,5 @@ def txt_blog(link, caminho, site_pb, site_en, site_es):
         interface.write('\n\n')
     interface.write('[:]')
     
+def txt_site (link, caminho, site_pb, site_en, site_es):
+    print('CODA CODA CODA')
