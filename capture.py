@@ -80,7 +80,7 @@ def get_author(site):
     range_authors = len((authors))
     for i in range(range_authors):
         if (i % 3 == 0) or (i == 0) :
-             author.append(authors[i].text)
+             author.append(authors[i].text.lstrip().rstrip())
     author.pop() #Para tirar o lixo capturado(textos que não são nomes dos autores)
     return author
 

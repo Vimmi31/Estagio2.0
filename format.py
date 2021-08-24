@@ -58,7 +58,7 @@ def txt_twitter(link, caminho, site_pb, site_en):
     twitter.write(capture.get_keyword(site_en))
     twitter.close()
 
-def txt_interface(link, caminho, site_pb, site_en, site_es):
+def txt_blog(link, caminho, site_pb, site_en, site_es):
     """Função que cria o texto de um post para o site, cria um arquivo de texto no caminho especificado com o conteudo gerado
 
     Args:
@@ -66,18 +66,52 @@ def txt_interface(link, caminho, site_pb, site_en, site_es):
         caminho (Str): Aonde o aqrquivo será salvo no PC
         site (BeautifulSoup): Conteudo html do resumo
     """
-    caminho = caminho.rstrip() + 'publicação.txt'
+    caminho = caminho.rstrip() + 'blog.txt'
     try:
         open(caminho, 'r+') 
     except FileNotFoundError:
         open(caminho, 'w+')    
     interface = open(caminho, 'a')
+    # For responsavel pela criação da linha de titulos
     for i in range(3):
         if i == 0:
             lan = site_pb
+            tag = 'pb' # variavel tag recebe a linguagem da parte que está sendo executada no momento
         elif i == 1:
             lan = site_en
+            tag = 'en'
         else:
             lan = site_es
-        interface.write(capture.get_title(lan))
-        interface.write("_"*30)
+            tag = 'es'
+        interface.write(('[:' + tag + ']' + capture.get_title(lan)).replace('\n', ''))
+        if tag == 'es':
+            interface.write('[:]')
+    interface.write('\n\n') # Quebra de linha para organização
+    # For responsavel pela geração do corpo do site
+    for i in range(3):
+        if i == 0:
+            lan = site_pb
+            tag = 'pb'
+            acssTxt = 'Acesso em:' # Variaveis que recebe o idioma da escrita
+            keyTxt = 'Palavras-Chave: '
+        elif i == 1:
+            lan = site_en
+            tag = 'en'
+            acssTxt = 'Access in:'
+            keyTxt = 'Keywords: '
+        else:
+            lan = site_es
+            tag = 'es'
+            acssTxt = 'Acceso en:'
+            keyTxt = 'Palabras clave: '
+            
+        interface.write('[:' + tag + ']' + '\n' + capture.get_abstract(lan))
+        interface.write('\n\n')
+        
+        interface.write('<strong>' + acssTxt +'</strong> <a href="' +capture.get_original_link(lan) + '">' + capture.get_original_link(lan)+'</a>')
+        interface.write('\n\n')
+        
+        interface.write('<strong>' + keyTxt + '</strong>' + capture.get_keyword(lan, Hashtag=False))
+        interface.write('\n\n')
+    interface.write('[:]')
+    
