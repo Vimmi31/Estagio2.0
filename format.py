@@ -130,5 +130,60 @@ def txt_blog(link, caminho, site_pb, site_en, site_es):
         interface.write('\n\n')
     interface.write('[:]')
     
-def txt_site (link, caminho, site_pb, site_en, site_es):
-    print('CODA CODA CODA')
+def txt_publication (link, caminho, site_pb, site_en, site_es):
+    caminho = caminho.rstrip() + 'interface.txt'
+    try:
+        open(caminho, 'r+') 
+    except FileNotFoundError:
+        open(caminho, 'w+')    
+    publication = open(caminho, 'a')
+    
+    authors = capture.get_author(site_pb)
+    if authors != 'Não foi possivel capturar os autores':
+    # Formatando os nomes do autores para a norma vancouver, EX: Vinicius Mendes Barbosa = Barbosa VM
+        lfauthors = [] # lista dos autores formatados
+        for author in authors:
+            author = author.split(' ')
+            end = len(author) 
+            fauthor = str() # autor formatado
+            for i in range(end):
+                if i == end - 1: # Se i for = a ultima passada do for ele para, para não tirar letras do ultimo nome
+                    break
+                else:
+                    if fauthor == None:
+                        fauthor =  author[i][0]
+                    else: 
+                        fauthor = fauthor + author[i][0]
+            fauthor = author[-1] + ' ' + fauthor
+            lfauthors.append(fauthor)
+    for i in range(3):
+        if i == 0:
+            lan = site_pb
+            acssTxt = 'Acesso em:' # Variaveis que recebe o idioma da escrita
+            keyTxt = 'Palavras-Chave: '
+        elif i == 1:
+            acssTxt = 'Access in:'
+            keyTxt = 'Keywords: '
+            lan = site_en
+        else:
+            lan = site_es
+            acssTxt = 'Acceso en:'
+            keyTxt = 'Palabras clave: '
+        # Escrevendo o cabeçalho
+        if len(lfauthors) == 1:
+            publication.write(lfauthors[0])
+        else:
+            publication.write(lfauthors[0] + ', et al. ')    
+        original = capture.get_original_link(lan)
+        publication.write('<strong>' + capture.get_title(lan) + '</strong>' + ' Interface (Botucatu). 2021; 25 e' + original[34:] + ' ' + '<a href="' + original + '">' + original + '</a>' )
+        # Escrevendo o Resumo
+        publication.write('\n\n')
+        publication.write(capture.get_abstract(lan))
+        # Escrevendo o link de acesso
+        publication.write('\n\n')
+        publication.write('<strong>' + acssTxt + '</strong> ' + '<a href="' + original + '">' + original + '</a>')
+        # Escrevendo as palavras chaves
+        publication.write('\n\n')
+        publication.write('<strong>' + keyTxt + '</strong> ' + capture.get_keyword(lan, Hashtag=False))
+        publication.write('\n\n' + '_'*50 + '\n\n' )
+        

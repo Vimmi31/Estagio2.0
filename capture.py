@@ -19,7 +19,6 @@ def test_connection(link):
             continue
         else:
             return (link)
-            break
         
 def capture_html(link):
     """Retorna o conteudo html do link
@@ -30,7 +29,7 @@ def capture_html(link):
     site = BeautifulSoup(content, 'html.parser')
     return(site)
 
-def get_title(site, social = True):
+def get_title(site):
     """Retorna o Titulo do resumo
     Args:
         site (BeautifulSoup): Conteudo html do resumo
@@ -40,7 +39,7 @@ def get_title(site, social = True):
         [type]: [description]
     """
     title = site.find('h1', attrs={'class': 'article-title'})
-    return (title.text.rstrip('\n'))
+    return (title.text.replace('\n', ''))
     
 def get_abstract(site):
     """Retorna o resumo em si(apenas o texto principal)
@@ -73,6 +72,8 @@ def get_keyword(site, Hashtag = True):
     else:
         if Hashtag == True:
             keyword = '#' + keyword.replace(" ", "").replace(';', ' #')
+        else:
+            keyword = keyword.replace(';', ',')
         return keyword
 
 def get_author(site):
@@ -88,7 +89,7 @@ def get_author(site):
         author = []
         range_authors = len((authors))
         for i in range(range_authors):
-            if (i % 3 == 0) or (i == 0) :
+            if (i % 3 == 0) or (i == 0) : # Os nomes dos autores são estão em posiçoes multiplas de 3 da lista
                 author.append(authors[i].text.lstrip().rstrip())
         author.pop() #Para tirar o lixo capturado(textos que não são nomes dos autores)
         return author
