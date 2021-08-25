@@ -8,7 +8,7 @@ original = capture.get_original_link(site_pb)
 test = capture.get_author(site_pb)
 
 caminho = "D:\Programas\ "
-#format.txt_facebook(link, caminho, site_pb)
-#format.txt_twitter(link, caminho, site_pb, site_en)
-#format.txt_blog(link, caminho, site_pb, site_en, site_es)
+format.txt_facebook(link, caminho, site_pb)
+format.txt_twitter(link, caminho, site_pb, site_en)
+format.txt_blog(link, caminho, site_pb, site_en, site_es)
 format.txt_publication(link, caminho, site_pb, site_en, site_es)
