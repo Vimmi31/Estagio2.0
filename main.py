@@ -5,7 +5,6 @@ site_pb = capture.capture_html(link)
 site_en = capture.capture_html(link.replace('pt', 'en'))
 site_es = capture.capture_html(link.replace('pt', 'es'))
 original = capture.get_original_link(site_pb)
-test = capture.get_author(site_pb)
 
 caminho = "D:\Programas\ "
 format.txt_facebook(link, caminho, site_pb)

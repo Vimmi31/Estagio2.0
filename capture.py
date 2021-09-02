@@ -110,3 +110,15 @@ def get_original_link(site):
         return original.text
     except: 
         return 'Não foi possivel capturar o link original'
+
+def get_kind(site):
+    """retorna o tipo do artigo(Artigo, dossie, entrevista etc)
+    Args:
+        site (BeautifulSoup): Conteudo html do resumo
+
+    Returns:
+         [type]: [description]
+    """
+    kind = site.find('span', attrs={'class': '_articleBadge'})
+    return type.text
+    

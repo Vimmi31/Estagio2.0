@@ -140,9 +140,12 @@ def txt_publication (link, caminho, site_pb, site_en, site_es):
     
     authors = capture.get_author(site_pb)
     if authors != 'Não foi possivel capturar os autores':
-    # Formatando os nomes do autores para a norma vancouver, EX: Vinicius Mendes Barbosa = Barbosa VM
+        
+    # Formatando os nomes do autores para a norma vancouver, EX: Vinicius Mendes Barbosa = Barbosa VM e escrevendo o nome dos autores sem formatação(para o campo "autores" do site)
+        publication.write('Autores:\n')
         lfauthors = [] # lista dos autores formatados
         for author in authors:
+            publication.write(author + ', ')
             author = author.split(' ')
             end = len(author) 
             fauthor = str() # autor formatado
@@ -156,6 +159,7 @@ def txt_publication (link, caminho, site_pb, site_en, site_es):
                         fauthor = fauthor + author[i][0]
             fauthor = author[-1] + ' ' + fauthor
             lfauthors.append(fauthor)
+    publication.write('\n\n' + '_'*50 + '\n\n')
     for i in range(3):
         if i == 0:
             lan = site_pb
@@ -175,7 +179,7 @@ def txt_publication (link, caminho, site_pb, site_en, site_es):
         else:
             publication.write(lfauthors[0] + ', et al. ')    
         original = capture.get_original_link(lan)
-        publication.write('<strong>' + capture.get_title(lan) + '</strong>' + ' Interface (Botucatu). 2021; 25 e' + original[34:] + ' ' + '<a href="' + original + '">' + original + '</a>' )
+        publication.write('<strong>' + capture.get_title(lan) + '. </strong>' + ' Interface (Botucatu). 2021; 25 e' + original[34:] + ' ' + '<a href="' + original + '">' + original + '</a>' )
         # Escrevendo o Resumo
         publication.write('\n\n')
         publication.write(capture.get_abstract(lan))
@@ -186,4 +190,5 @@ def txt_publication (link, caminho, site_pb, site_en, site_es):
         publication.write('\n\n')
         publication.write('<strong>' + keyTxt + '</strong> ' + capture.get_keyword(lan, Hashtag=False))
         publication.write('\n\n' + '_'*50 + '\n\n' )
+
         
