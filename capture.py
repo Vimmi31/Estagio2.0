@@ -13,7 +13,7 @@ def test_connection(link):
     """
     while True:
         try:
-            response = requests.get(link)
+           response = requests.get(link)
         except:
             link = input('Link fora do ar ou invalido, tente novamente: ')
             continue
