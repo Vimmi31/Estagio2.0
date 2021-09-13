@@ -3,13 +3,13 @@ from bs4 import BeautifulSoup
 
 def test_connection(link):
     """
-        Função que valida se o link digitado é correto, se não for pede para o user digitar um novo link, até que ele funcione
+        Função que valida se o link digitado é correto, se não for pede para o user digitar um novo link, até que ele funcione.
+        Também valida se o site digitado é ou não o do resumo, se não for tenta colocar o link para o resumo do artigo, se esse não existir, retorna o primeiro link funcional digitado
     Args:
         link [String]: Recebe o link do resumo 
 
     Returns:
         [str]: [Link funcional]
-        [none]: [Quando não existir conexão]
     """
     while True:
         try:
@@ -18,7 +18,20 @@ def test_connection(link):
             link = input('Link fora do ar ou invalido, tente novamente: ')
             continue
         else:
-            return (link)
+            break
+    if 'abstract' not in link: # Verificando se o link colocado é de um Resumo
+        transform = link.split('/')
+        transform.insert(7, 'abstract')
+        transformSTR = '/'.join(map(str, transform))
+        try:
+           response = requests.get(transformSTR)
+        except:
+            print('Atenção o artigo do link em questão não tem uma pagina de resumo, isso pode fazer com que o software não consiga criar os textos corretamente, revise-os antes de postar.') 
+            return(link)
+        else: 
+            return (transformSTR)
+    else:
+        return(link)
         
 def capture_html(link):
     """Retorna o conteudo html do link
@@ -120,5 +133,5 @@ def get_kind(site):
          [type]: [description]
     """
     kind = site.find('span', attrs={'class': '_articleBadge'})
-    return type.text
+    return kind.text
     
