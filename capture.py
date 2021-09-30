@@ -1,4 +1,4 @@
-import requests
+import requests, os
 from bs4 import BeautifulSoup
 
 def test_connection(link):
@@ -13,18 +13,19 @@ def test_connection(link):
     """
     while True:
         try:
-           response = requests.get(link)
-        except:
+            requests.get(link) 
+        except Exception as erro:
+            print(erro)  
             link = input('Link fora do ar ou invalido, tente novamente: ')
-            continue
         else:
             break
+        
     if 'abstract' not in link: # Verificando se o link colocado é de um Resumo
         transform = link.split('/')
         transform.insert(7, 'abstract')
         transformSTR = '/'.join(map(str, transform))
         try:
-           response = requests.get(transformSTR)
+            requests.get(transformSTR)
         except:
             print('Atenção o artigo do link em questão não tem uma pagina de resumo, isso pode fazer com que o software não consiga criar os textos corretamente, revise-os antes de postar.') 
             return(link)
