@@ -4,5 +4,6 @@
  Instale para funcionar:
 
  ** pip install python-certifi-win32 **
+ ** pip install certifi==2015.04.28 **
  
  
