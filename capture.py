@@ -13,7 +13,7 @@ def test_connection(link):
     """
     while True:
         try:
-            r = requests.get(link)
+            requests.get(link)
         except :
             link = input('Link fora do ar ou invalido, tente novamente: ')
         else:
@@ -23,7 +23,7 @@ def test_connection(link):
         transform.insert(7, 'abstract')
         transformSTR = '/'.join(map(str, transform))
         try:
-            r = requests.get(transformSTR, verify=False)
+            requests.get(transformSTR, verify=False)
         except:
             print('Atenção o artigo do link em questão não tem uma pagina de resumo, isso pode fazer com que o software não consiga criar os textos corretamente, revise-os antes de postar.') 
             return(link)
