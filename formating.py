@@ -131,6 +131,13 @@ def txt_blog(link, caminho, site_pb, site_en, site_es):
     interface.write('[:]')
     
 def txt_publication (link, caminho, site_pb, site_en, site_es):
+    """Função que cria o texto de um post para um site wordpress formatado em html, cria um arquivo de texto no caminho especificado com o conteudo gerado
+
+    Args:
+        link (Str): Link do resumo
+        caminho (Str): Aonde o aqrquivo será salvo no PC
+        site (BeautifulSoup): Conteudo html do resumo
+    """
     caminho = caminho.rstrip() + 'interface.txt'
     try:
         open(caminho, 'r+') 
@@ -189,6 +196,4 @@ def txt_publication (link, caminho, site_pb, site_en, site_es):
         # Escrevendo as palavras chaves
         publication.write('\n\n')
         publication.write('<strong>' + keyTxt + '</strong> ' + capture.get_keyword(lan, Hashtag=False))
-        publication.write('\n\n' + '_'*50 + '\n\n' )
-
-        
+        publication.write('\n\n' + '_'*50 + '\n\n' )       
