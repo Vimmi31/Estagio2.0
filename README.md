@@ -4,6 +4,8 @@
  Instale para funcionar:
 
  ** pip install python-certifi-win32 **
- ** pip install certifi==2015.04.28 **
+ ** pip install certifi==2015.04.28 ** #Apenas se apresentar algum erro referente a certicado ssl 
+ ** pip install bs4 *
+ ** pip install requests*
  
  
