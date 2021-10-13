@@ -1,57 +1,59 @@
 import requests, os
 from bs4 import BeautifulSoup
 
-def test_connection(link):
+class Capture:
+    """Classe responsavel por capturar os elementos no site
     """
-        Função que valida se o link digitado é correto, se não for pede para o user digitar um novo link, até que ele funcione.
-        Também valida se o site digitado é ou não o do resumo, se não for tenta colocar o link para o resumo do artigo, se esse não existir, retorna o primeiro link funcional digitado
-    Args:
-        link [String]: Recebe o link do resumo 
+    def __init__(self, link):
+        self.link = link
+        self.site = None
 
-    Returns:
-        [str]: [Link funcional]
-    """
-    while True:
+    def test_connection(self):
+    
+        """
+            Metodo que valida se o link digitado é correto, se não for pede para o user digitar um novo link, até que ele funcione.
+            Também valida se o site digitado é ou não o do resumo, se não for tenta colocar o link para o resumo do artigo, se esse não existir, retorna o primeiro link funcional digitado.
+        Returns:
+            [str]: [Link funcional]
+        """
+        while True:
+            try:
+                requests.get(self.link)
+            except :
+                self.link = input('Link fora do ar ou invalido, tente novamente: ')
+            else:
+                break
+        if 'abstract' not in self.link: # Verificando se o link colocado é de um Resumo
+            transform = self.link.split('/')
+            transform.insert(7, 'abstract')
+            transformed = '/'.join(map(str, transform))
+            try:
+                requests.get(transformed)
+            except:
+                print('Atenção o artigo do link em questão não tem uma pagina de resumo, isso pode fazer com que o software não consiga criar os textos corretamente, revise-os antes de postar.') 
+                return(self.link)
+            else: 
+                self.link = transformed  
+                
+    def capture_html(self):
+        """Retorna o conteudo html do link
+        Args:
+            link (String): Link do site
+        """
+        content = requests.get(self.link).content
+        site = BeautifulSoup(content, 'html.parser')
+        self.site = site
+
+    def get_title(self):
+        """Retorna o Titulo do resumo
+        Returns:
+            [String]: [Titulo do artigo]
+        """
         try:
-            requests.get(link)
-        except :
-            link = input('Link fora do ar ou invalido, tente novamente: ')
-        else:
-            break
-    if 'abstract' not in link: # Verificando se o link colocado é de um Resumo
-        transform = link.split('/')
-        transform.insert(7, 'abstract')
-        transformSTR = '/'.join(map(str, transform))
-        try:
-            requests.get(transformSTR, verify=False)
-        except:
-            print('Atenção o artigo do link em questão não tem uma pagina de resumo, isso pode fazer com que o software não consiga criar os textos corretamente, revise-os antes de postar.') 
-            return(link)
-        else: 
-            return (transformSTR)
-    else:
-        return(link)
-        
-def capture_html(link):
-    """Retorna o conteudo html do link
-    Args:
-        link (String): Link do site
-    """
-    content = requests.get(link).content
-    site = BeautifulSoup(content, 'html.parser')
-    return(site)
-
-def get_title(site):
-    """Retorna o Titulo do resumo
-    Args:
-        site (BeautifulSoup): Conteudo html do resumo
-        social (bool, optional): [description]. Defaults to True.
-
-    Returns:
-        [type]: [description]
-    """
-    title = site.find('h1', attrs={'class': 'article-title'})
-    return (title.text.replace('\n', ''))
+            title = self.site.find('h1', attrs={'class': 'article-title'})
+            return (title.text.replace('\n', ''))
+        except AttributeError:
+            return ("Não foi possivel capturar o titulo")
     
 def get_abstract(site):
     """Retorna o resumo em si(apenas o texto principal)
