@@ -1,9 +1,7 @@
-import capture
+import capture 
 import formating
 
 abstract = capture.Capture(input('Digite o link do artigo: '))
-abstract.test_connection()
-abstract.capture_html()
 a = abstract.get_title()
 print(a)
 

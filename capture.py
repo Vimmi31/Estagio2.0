@@ -5,25 +5,25 @@ class Capture:
     """Classe responsavel por capturar os elementos no site
     """
     def __init__(self, link):
-        self.link = link
-        self.site = None
+        """Metodo construtor que recebe os valores necessarios para a execução da classe, ele também:
+        - Valida se o link digitado é correto, se não for pede para o user digitar um novo link, até que ele funcione.
+        - Valida se o site digitado é ou não o do resumo, se não for tenta colocar o link para o resumo do artigo, se esse não existir, retorna o primeiro link funcional digitado
+        - Captura o HTML do site
 
-    def test_connection(self):
-    
-        """
-            Metodo que valida se o link digitado é correto, se não for pede para o user digitar um novo link, até que ele funcione.
-            Também valida se o site digitado é ou não o do resumo, se não for tenta colocar o link para o resumo do artigo, se esse não existir, retorna o primeiro link funcional digitado.
-        Returns:
-            [str]: [Link funcional]
-        """
+        Args:
+            link (String): É o link para qual serão criados os textos.
+        """ 
+        #Validando Link
+        self.link = link
         while True:
             try:
                 requests.get(self.link)
-            except :
+            except:
                 self.link = input('Link fora do ar ou invalido, tente novamente: ')
             else:
                 break
-        if 'abstract' not in self.link: # Verificando se o link colocado é de um Resumo
+         # Verificando se o link colocado é de um Resumo    
+        if 'abstract' not in self.link:
             transform = self.link.split('/')
             transform.insert(7, 'abstract')
             transformed = '/'.join(map(str, transform))
@@ -31,19 +31,13 @@ class Capture:
                 requests.get(transformed)
             except:
                 print('Atenção o artigo do link em questão não tem uma pagina de resumo, isso pode fazer com que o software não consiga criar os textos corretamente, revise-os antes de postar.') 
-                return(self.link)
-            else: 
-                self.link = transformed  
-                
-    def capture_html(self):
-        """Retorna o conteudo html do link
-        Args:
-            link (String): Link do site
-        """
+            else:
+                self.link = transformed
+        #Capturando conteudo HTML do site
         content = requests.get(self.link).content
         site = BeautifulSoup(content, 'html.parser')
         self.site = site
-
+    
     def get_title(self):
         """Retorna o Titulo do resumo
         Returns:
@@ -55,40 +49,38 @@ class Capture:
         except AttributeError:
             return ("Não foi possivel capturar o titulo")
     
-def get_abstract(site):
-    """Retorna o resumo em si(apenas o texto principal)
-    Args:
-        site (BeautifulSoup): Conteudo html do resumo
-    Returns:
-        Str: Resumo do site
-    """
-    try:
-        section = site.find('article', attrs={'class': 'col-md-10 col-md-offset-2 col-sm-12 col-sm-offset-0', 'id':'articleText'})
-        abstract = section.find('p')
-        return abstract.text
-    except:
-        return "Não foi possivel capturar o resumo"
+    def get_abstract(self):
+        """Retorna o resumo em si(apenas o texto principal)
+        Returns:
+            Str: Resumo do site
+        """
+        try:
+            section = self.site.find('article', attrs={'class': 'col-md-10 col-md-offset-2 col-sm-12 col-sm-offset-0', 'id':'articleText'})
+            abstract = section.find('p')
+            return abstract.text
+        except:
+            return "Não foi possivel capturar o resumo"
 
-def get_keyword(site, Hashtag = True):
-    """Retorna as palavras chaves do artigo
-    Args:
-        site (BeautifulSoup): Conteudo html do resumo
-        Hashtag (bool, optional): Se verdadeiro retorna elas em formato de tags para redes sociais. Defaults to True.
+    def get_keyword(self, Hashtag = True):
+        """Retorna as palavras chaves do artigo
+        Args:
+            site (BeautifulSoup): Conteudo html do resumo
+            Hashtag (bool, optional): Se verdadeiro retorna elas em formato de tags para redes sociais. Defaults to True.
 
-    Returns:
-        Str: Palavras chaves
-    """
-    try:
-        section = site.find('article', attrs={'class': 'col-md-10 col-md-offset-2 col-sm-12 col-sm-offset-0', 'id':'articleText'})
-        keyword = section.find('br').next_element
-    except:
-        return "Não foi possivel capturar as palavras chaves"
-    else:
-        if Hashtag == True:
-            keyword = '#' + keyword.replace(" ", "").replace(';', ' #')
+        Returns:
+            Str: Palavras chaves
+        """
+        try:
+            section = self.site.find('article', attrs={'class': 'col-md-10 col-md-offset-2 col-sm-12 col-sm-offset-0', 'id':'articleText'})
+            keyword = section.find('br').next_element
+        except:
+            return "Não foi possivel capturar as palavras chaves"
         else:
-            keyword = keyword.replace(';', ',')
-        return keyword
+            if Hashtag == True:
+                keyword = '#' + keyword.replace(" ", "").replace(';', ' #')
+            else:
+                keyword = keyword.replace(';', ',')
+            return keyword
 
 def get_author(site):
     """Retorna todos os autores do artigo
