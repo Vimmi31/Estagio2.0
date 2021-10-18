@@ -1,3 +1,6 @@
+"""Modulo responsavel pela captação e tratamento inicial das infomaçoes contidas no site da Scielo
+    
+"""
 import requests, os
 from bs4 import BeautifulSoup
 
@@ -61,7 +64,7 @@ class Capture:
         except:
             return "Não foi possivel capturar o resumo"
 
-    def get_keyword(self, Hashtag = True):
+    def get_keyword(self, hashtag = True):
         """Retorna as palavras chaves do artigo
         Args:
             site (BeautifulSoup): Conteudo html do resumo
@@ -76,55 +79,55 @@ class Capture:
         except:
             return "Não foi possivel capturar as palavras chaves"
         else:
-            if Hashtag == True:
+            if hashtag == True:
                 keyword = '#' + keyword.replace(" ", "").replace(';', ' #')
             else:
                 keyword = keyword.replace(';', ',')
             return keyword
 
-def get_author(site):
-    """Retorna todos os autores do artigo
-    Args:
-        site (BeautifulSoup): Conteudo html do resumo
-    Returns:
-        Str: Autores
-    """
-    try:
-        section = site.find('div', attrs={'class': 'contribGroup'})
-        authors = section.find_all('a')
-        author = []
-        range_authors = len((authors))
-        for i in range(range_authors):
-            if (i % 3 == 0) or (i == 0) : # Os nomes dos autores são estão em posiçoes multiplas de 3 da lista
-                author.append(authors[i].text.lstrip().rstrip())
-        author.pop() #Para tirar o lixo capturado(textos que não são nomes dos autores)
-        return author
-    except:
-        return ["Não foi possivel capturar os autores"]
+    def get_author(self):
+        """Retorna todos os autores do artigo
+        Args:
+            site (BeautifulSoup): Conteudo html do resumo
+        Returns:
+            Str: Autores
+        """
+        try:
+            section = self.site.find('div', attrs={'class': 'contribGroup'})
+            authors = section.find_all('a')
+            author = []
+            range_authors = len((authors))
+            for i in range(range_authors):
+                if (i % 3 == 0) or (i == 0) : # Os nomes dos autores são estão em posiçoes multiplas de 3 da lista
+                    author.append(authors[i].text.lstrip().rstrip())
+            author.pop() #Para tirar o lixo capturado(textos que não são nomes dos autores)
+            return author
+        except:
+            return ["Não foi possivel capturar os autores"]
 
-def get_original_link(site):
-    """Função que rotorna o link do texto completo(doi)
+    def get_original_link(self):
+        """Função que rotorna o link do texto completo(doi)
 
-    Args:
-        site (BeautifulSoup): Conteudo html do resumo
-    Returns:
-        Str: Link do texto completo
-    """
-    try:
-        section = site.find('span', attrs={'class': 'group-doi'})
-        original = section.find('a')
-        return original.text
-    except: 
-        return 'Não foi possivel capturar o link original'
+        Args:
+            site (BeautifulSoup): Conteudo html do resumo
+        Returns:
+            Str: Link do texto completo
+        """
+        try:
+            section = self.site.find('span', attrs={'class': 'group-doi'})
+            original = section.find('a')
+            return original.text
+        except: 
+            return 'Não foi possivel capturar o link original'
 
-def get_kind(site):
-    """retorna o tipo do artigo(Artigo, dossie, entrevista etc)
-    Args:
-        site (BeautifulSoup): Conteudo html do resumo
+    def get_kind(self):
+        """retorna o tipo do artigo(Artigo, dossie, entrevista etc)
+        Args:
+            site (BeautifulSoup): Conteudo html do resumo
 
-    Returns:
-         [type]: [description]
-    """
-    kind = site.find('span', attrs={'class': '_articleBadge'})
-    return kind.text
+        Returns:
+            [type]: [description]
+        """
+        kind = self.site.find('span', attrs={'class': '_articleBadge'})
+        return kind.text
     

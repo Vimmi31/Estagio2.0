@@ -1,4 +1,4 @@
-import capture 
+import capture  
 import formating
 
 abstract = capture.Capture(input('Digite o link do artigo: '))
