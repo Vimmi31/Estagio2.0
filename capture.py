@@ -33,7 +33,7 @@ class Capture:
             try:
                 requests.get(transformed)
             except:
-                print('Atenção o artigo do link em questão não tem uma pagina de resumo, isso pode fazer com que o software não consiga criar os textos corretamente, revise-os antes de postar.') 
+                print('Atenção o artigo do link em questão não tem uma pagina de resumo, isso pode fazer com que o software não consiga criar os textos corretamente, revise-os antes de postar.')
             else:
                 self.link = transformed
         #Capturando conteudo HTML do site
