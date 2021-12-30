@@ -1,12 +1,10 @@
-"""Modulo responsavel pela captação e tratamento inicial das infomaçoes contidas no site da Scielo
-    
-"""
+"""Classe responsavel pela captação e tratamento inicial das infomaçoes contidas no site da Scielo"""
+
 import requests, os
 from bs4 import BeautifulSoup
 
 class Capture:
-    """Classe responsavel por capturar os elementos no site
-    """
+    """Classe responsavel por capturar os elementos no site"""
     def __init__(self, link):
         """Metodo construtor que recebe os valores necessarios para a execução da classe, ele também:
         - Valida se o link digitado é correto, se não for pede para o user digitar um novo link, até que ele funcione.
@@ -14,17 +12,25 @@ class Capture:
         - Captura o HTML do site
 
         Args:
-            link (String): É o link para qual serão criados os textos.
-        """ 
+            link (String): É o link para qual serão criados os textos.""" 
+            
         #Validando Link
+        self.title = ''
         self.link = link
+        cont = 0
         while True:
-            try:
-                requests.get(self.link)
-            except:
-                self.link = input('Link fora do ar ou invalido, tente novamente: ')
+            if cont < 4:   
+                cont += 1 
+                try:
+                    requests.get(self.link)
+                except:
+                    self.link = input('Link fora do ar ou invalido, tente novamente: ')
+                else:
+                    break
             else:
-                break
+                print("Algum problema de conexão com o site está acontecendo, verifique se o computador está conectado a internet e tente novamente mais tarde.")
+                exit()
+            
          # Verificando se o link colocado é de um Resumo    
         if 'abstract' not in self.link:
             transform = self.link.split('/')
@@ -36,31 +42,27 @@ class Capture:
                 print('Atenção o artigo do link em questão não tem uma pagina de resumo, isso pode fazer com que o software não consiga criar os textos corretamente, revise-os antes de postar.')
             else:
                 self.link = transformed
+                
         #Capturando conteudo HTML do site
         content = requests.get(self.link).content
-        site = BeautifulSoup(content, 'html.parser')
-        self.site = site
+        self.site = BeautifulSoup(content, 'html.parser')
     
     def get_title(self):
         """Retorna o Titulo do resumo
         Returns:
-            [String]: [Titulo do artigo]
-        """
-        try:
-            title = self.site.find('h1', attrs={'class': 'article-title'})
-            return (title.text.replace('\n', ''))
-        except AttributeError:
-            return ("Não foi possivel capturar o titulo")
-    
-    def get_abstract(self):
+        [String]: [Titulo do artigo]"""
+        self.title = (self.site.find('h1', attrs={'class': 'article-title'})).text
+        return self.title
+        
+    def get_summary(self):
         """Retorna o resumo em si(apenas o texto principal)
         Returns:
-            Str: Resumo do site
-        """
+            Str: Resumo do site"""
         try:
-            section = self.site.find('article', attrs={'class': 'col-md-10 col-md-offset-2 col-sm-12 col-sm-offset-0', 'id':'articleText'})
-            abstract = section.find('p')
-            return abstract.text
+            section = self.site.find('article',
+                                     attrs={'class': 'col-md-10 col-md-offset-2 col-sm-12 col-sm-offset-0', 'id':'articleText'})
+            summary = section.find('p')
+            return summary.text
         except:
             return "Não foi possivel capturar o resumo"
 
@@ -71,10 +73,10 @@ class Capture:
             Hashtag (bool, optional): Se verdadeiro retorna elas em formato de tags para redes sociais. Defaults to True.
 
         Returns:
-            Str: Palavras chaves
-        """
+            Str: Palavras chaves"""
         try:
-            section = self.site.find('article', attrs={'class': 'col-md-10 col-md-offset-2 col-sm-12 col-sm-offset-0', 'id':'articleText'})
+            section = self.site.find('article', 
+                                     attrs={'class': 'col-md-10 col-md-offset-2 col-sm-12 col-sm-offset-0', 'id':'articleText'})
             keyword = section.find('br').next_element
         except:
             return "Não foi possivel capturar as palavras chaves"
@@ -90,15 +92,15 @@ class Capture:
         Args:
             site (BeautifulSoup): Conteudo html do resumo
         Returns:
-            Str: Autores
-        """
+            Str: Autores"""
         try:
             section = self.site.find('div', attrs={'class': 'contribGroup'})
             authors = section.find_all('a')
             author = []
             range_authors = len((authors))
             for i in range(range_authors):
-                if (i % 3 == 0) or (i == 0) : # Os nomes dos autores são estão em posiçoes multiplas de 3 da lista
+                
+                if (i % 3 == 0) or (i == 0) : 
                     author.append(authors[i].text.lstrip().rstrip())
             author.pop() #Para tirar o lixo capturado(textos que não são nomes dos autores)
             return author

@@ -1,12 +1,6 @@
-import capture  
-import formating
+from capture import Capture  
+from formating import Formating
 
-abstract = capture.Capture(input('Digite o link do artigo: '))
-a = abstract.get_title()
-print(a)
-
-
-
-caminho = 'C:/Users/Vinicius/Desktop/Estagio2.0/Estagio2.0/Text/ '
-
-
+link = input('Qual o link do artigo')
+summary = Formating(link)
+summary.txt_facebook(link)
