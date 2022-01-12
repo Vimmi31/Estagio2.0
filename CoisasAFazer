@@ -1,3 +1,5 @@
 Pasta com o nome do artigo é criada automaticamenta(falata fazer com que se o mesmo nome de artigo for usado, uma forma de evitar conflito entre as duas pastas)
 
 Também resta fazer a implementação das outras formataçoes, como a do facebook(Instanciação da classe de captura feita dentro da classe de formatação - lembrar de atualizar os nomes de variaveis)
+
+Arquivo Requirements.txt
