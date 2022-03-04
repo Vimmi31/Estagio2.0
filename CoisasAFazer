@@ -1,5 +1,11 @@
-Pasta com o nome do artigo é criada automaticamenta(falata fazer com que se o mesmo nome de artigo for usado, uma forma de evitar conflito entre as duas pastas)
+Pasta com o nome do artigo é criada automaticamenta(falta fazer com que se o mesmo nome de artigo for usado, uma forma de evitar conflito entre as duas pastas).
 
-Também resta fazer a implementação das outras formataçoes, como a do facebook(Instanciação da classe de captura feita dentro da classe de formatação - lembrar de atualizar os nomes de variaveis)
+Fazer com que a captura aconteça em todas as 3 linguas, não só em portugues.
 
-Arquivo Requirements.txt
+Também resta fazer a implementação das outras formataçoes(Estão prontas: facebook e Twitter)(Instanciação da classe de captura feita dentro da classe de formatação - lembrar de atualizar os nomes de variaveis).
+
+Arquivo Requirements.txt (Feito, porém preciso testar para ver se os pacostes mencionados estão corretos).
+
+Adicionar interface para escolha da pasta.
+
+Adicionar menu de usuario amigavel.
